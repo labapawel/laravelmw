@@ -37,3 +37,16 @@ Route::get('/test/{id?}/{p1?}', function($id=1, $p1='ala'){
 // ograniczenie metod na rutingu
     ->only(['index','create']);
     });
+
+    Route::controller(\App\Http\Controllers\WiadomoscController::class)
+    ->prefix('/wiadomosc')
+    ->group(function(){
+        Route::get('/', 'index');
+        Route::get('/wyslane/{id}', 'wyslane');
+        Route::get('/dane/{id}', 'dane');
+        
+    });
+
+
+
+    // Route::resource('/wiadomosc', \App\Http\Controllers\WiadomoscController::class);
