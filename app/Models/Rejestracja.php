@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Rejestracja extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'osoba_id',
+        'rej',
+        'model_id',
+        'perwszarej',
+        'rodzpaliwa_id',
+        'uwagi',
+        'active',
+    ];
+
 }

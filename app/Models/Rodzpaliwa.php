@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Rodzpaliwa extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'rodzaj',
+        'active',
+       
+    ];
 }
