@@ -25,6 +25,7 @@ class importcepik extends Command
      */
     public function handle()
     {
+
         //
         $this->info("Pobieram dane z pliku import.csv");
         $dane = \Storage::disk('public')->get('import.csv');
@@ -70,30 +71,55 @@ class importcepik extends Command
                 $rodzaj = trim($dane[9]);
                 $paliwo = trim($dane[8]);
                 $war = trim($dane[18]);
+                $dataNasPrzrg = trim($dane[12]);
+                $dataPrzrg = trim($dane[1]);
                 $rejKrajZag = trim($dane[11]);
                 $rPaliwo = "-- Brak --";
                 $dataPR = '';
 
-               // dd($rejKrajZag);
-                if(preg_match_all('/([0-9X]{4}-[0-9X]{2}-[0-9X]{2})( \/ )([0-9X]{4}-[0-9X]{2}-[0-9X]{2})/', $rejKrajZag, $res))
+                //$this->info($dataPrzrg);
+                if(preg_match('/^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\.[0-9]{2}\.[0-9]{4}))(.*)/', $dataPrzrg, $res))
                 {
-                    if($res[3][0]!="XXXX-XX-XX")
-                        $dataPR = $res[3][0];
-                    else     
-                    $dataPR = $res[1][0];
+                    $dataPrzrg = date("Y-m-d", strtotime($res[1]));
+                    //  $this->info($dataPrzrg);
+                }
+               
+               // dd($rejKrajZag);
+                if(preg_match('/([0-9X]{4}-[0-9X]{2}-[0-9X]{2})( \/ )([0-9X]{4}-[0-9X]{2}-[0-9X]{2})/', $rejKrajZag, $res))
+                {
+                    if($res[3]!="XXXX-XX-XX")
+                    {
+                        $dataPR = $res[3]; 
+                        if(!strtotime($dataPR))
+                         {
+                            $dataPR = $res[1];
+                            
+                            \Log::error("Problem z datą przy importcie ", $res);
+                            $this->error("Problem z datą przy importcie {$res[0]}");
+                            continue;
+                         }
+                    }
+                    else{
+                         $dataPR = $res[1];
+                        
+                    }
+
+                  
+
 //dd($dataPR, $rejKrajZag);
                 }
+          
                      
 
 
                 if($paliwo=="P")
                 {
                     $rPaliwo = "Benzyna ";
-                    if(strpos('przystosowanego do zasilania gazem', $war)>0)
+                    if(strpos($war, 'przystosowanego do zasilania gazem')>0)
                     {
                         $rPaliwo .= "+ GAZ";
                     }
-                } elseif($paliwo=="R") $rPaliwo = "DIESEL"; 
+                } elseif($paliwo=="D") $rPaliwo = "DIESEL"; 
                 
 
 
@@ -106,7 +132,7 @@ class importcepik extends Command
 
                 $mModel =  \App\Models\Modele::firstOrCreate(['model'=>$model, 'marka_id'=>$mMarka->getKey(), 'rodzaj_id'=>$mRodzaj->getKey()]);
 
-
+                
                 $mRodzpaliwa = \App\Models\Rodzpaliwa::firstOrCreate(['rodzaj'=>$rPaliwo]);
                 $mRodzpaliwa->active = 1;
                 $mRodzpaliwa->save();
@@ -115,8 +141,19 @@ class importcepik extends Command
 
 
                 //problem z datą
-                //$mRej = \App\Models\Rejestracja::firstOrCreate(['rej'=>$rej,'perwszarej'=>$dataPR]);
+                $mRej = \App\Models\Rejestracja::firstOrCreate(['rej'=>$rej,'perwszarej'=>$dataPR]);
+                if(!$mRej->osoba_id)
+                        $mRej->osoba_id=1;
+                $mRej->model_id=$mModel->getKey();
+                $mRej->rodzpaliwa_id = $mRodzpaliwa->getKey();
+                $mRej->save();
 
+
+                $dataNasPrzrg = date("Y-m-d", strtotime($dataNasPrzrg));
+                if($dataNasPrzrg == '1970-01-01')
+                    $dataNasPrzrg=null;
+    
+                $mPrzeglad = \App\Models\Przeglad::firstOrCreate(['rejestracja_id'=>$mRej->getKey(), 'dataprzegladu'=>$dataPrzrg, 'datanastprzegladu'=>$dataNasPrzrg]);
 
 
              }
