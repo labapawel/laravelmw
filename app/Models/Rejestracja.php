@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Rejestracja extends Model
 {
     use HasFactory;
+    public $table = 'vrejestracjas';
     protected $fillable = [
         'osoba_id',
         'rej',

@@ -50,3 +50,7 @@ Route::get('/test/{id?}/{p1?}', function($id=1, $p1='ala'){
 
 
     // Route::resource('/wiadomosc', \App\Http\Controllers\WiadomoscController::class);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
