@@ -21,3 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/user1', function (Request $request) {
     return $request->user();
 })->middleware('auth');
+
+
+Route::get('/datarej', function (Request $request) {
+    return response()->json(['status'=>'ok']);
+})->middleware(['web','auth']);

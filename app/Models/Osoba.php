@@ -13,4 +13,11 @@ class Osoba extends Model
         return $this->hasMany(Wiadomosc::class,'osoba_id');
     }
 
+    public function getImienazwiskoAttribute(){
+        return "{$this->imie} {$this->nazwisko} ({$this->telefon})";
+    }
+    public function setImienazwiskoAttribute($val){
+
+    }
+
 }

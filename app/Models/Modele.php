@@ -21,4 +21,9 @@ class Modele extends Model
     public function rodzaj(){
         return $this->belongsTo(RodzajPojazdow::class,'rodzaj_id');
     }
+
+    public function getModelmarkaAttribute(){
+        return "{$this->marka->marka} ({$this->model})";
+    }
+    
 }

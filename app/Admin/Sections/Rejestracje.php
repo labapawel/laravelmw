@@ -100,9 +100,18 @@ class Rejestracje extends Section implements Initializable
     {
         $form = AdminForm::card()->addBody([
           
-                AdminFormElement::text('name', 'Nazwa')->required(),
-                AdminFormElement::text('email', 'Email')->required(),
-                AdminFormElement::password('password', 'Hasło'),
+                AdminFormElement::select('osoba_id','Właściciel', \App\Models\Osoba::class)->setDisplay('imienazwisko')->required()->setDefaultValue(1),
+                AdminFormElement::text('rej', 'Nr rej')->required(),
+                AdminFormElement::select('model_id','Model', \App\Models\modele::class)->setDisplay('modelmarka'),
+                AdminFormElement::select('rodzpaliwa_id','Paliwo', \App\Models\Rodzpaliwa::class)->setDisplay('rodzaj'),
+                AdminFormElement::date('perwszarej', "Data pierwszej rejestracji"),
+                AdminFormElement::html("<h2>Dane do ostatniego przeglądu</h2>"),
+
+                AdminFormElement::date('dataprzegladu', "Planowana data przeglądu")->setReadonly(true),
+                AdminFormElement::textarea('uwagiprzegladu', "Uwagi ost przeglądu")->setReadonly(true),
+                AdminFormElement::html("<h2>Planowanie przeglądu</h2>"),
+                AdminFormElement::html(view('admin.datarej')),
+                AdminFormElement::textarea('uwagi', "Uwagi"),
             ]);
 
         $form->getButtons()->setButtons([
