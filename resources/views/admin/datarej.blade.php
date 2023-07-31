@@ -11,7 +11,7 @@
         <div class="col-11">
             <div class="form-group form-element-text ">
                 <label for="daterej" class="control-label required">gen. datę nast. przeglądu</label> 
-                <input class="form-control" type="date" id="daterej" name="daterej" value="">
+                <input class="form-control" type="date" id="daterej" name="datenastprzeg" value="">
             </div>
         </div>
 </div>

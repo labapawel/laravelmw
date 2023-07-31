@@ -108,10 +108,10 @@ class Rejestracje extends Section implements Initializable
                 AdminFormElement::html("<h2>Dane do ostatniego przeglądu</h2>"),
 
                 AdminFormElement::date('dataprzegladu', "Planowana data przeglądu")->setReadonly(true),
-                AdminFormElement::textarea('uwagiprzegladu', "Uwagi ost przeglądu")->setReadonly(true),
+                // AdminFormElement::textarea('uwagiprzegladu', "Uwagi ost przeglądu")->setReadonly(true),
                 AdminFormElement::html("<h2>Planowanie przeglądu</h2>"),
                 AdminFormElement::html(view('admin.datarej')),
-                AdminFormElement::textarea('uwagi', "Uwagi"),
+                AdminFormElement::textarea('uwagiprzegladu', "Uwagi"),
             ]);
 
         $form->getButtons()->setButtons([
