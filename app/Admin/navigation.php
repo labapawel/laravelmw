@@ -51,6 +51,10 @@ return [
                ->setPriority(100)
                ->setIcon('fas fa-pen')
                ->setTitle('Przeglądy'),
+           (new Page(\App\Models\Osoba::class))
+               ->setPriority(100)
+               ->setIcon('fas fa-pen')
+               ->setTitle('Klienci'),
             //    ->setUrl('users')
             //    ->setAccessLogic(function (Page $page) {
             //        return auth()->user()->isSuperAdmin();

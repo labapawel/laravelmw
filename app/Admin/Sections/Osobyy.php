@@ -20,11 +20,11 @@ use SleepingOwl\Admin\Section;
 /**
  * Class Users
  *
- * @property \C:/Users/uczen/AppData/Local/Programs/Git/App/Models/Users $model
+ * @property \C:/Program Files/Git/App/Models/Users $model
  *
  * @see https://sleepingowladmin.ru/#/ru/model_configuration_section
  */
-class Rejestracje extends Section implements Initializable
+class Osobyy extends Section implements Initializable
 {
     /**
      * @var bool
@@ -34,7 +34,7 @@ class Rejestracje extends Section implements Initializable
     /**
      * @var string
      */
-    protected $title;
+    protected $title = "Klienci";
 
     /**
      * @var string
@@ -58,14 +58,16 @@ class Rejestracje extends Section implements Initializable
     {
         $columns = [
             AdminColumn::text('id', '#')->setWidth('50px')->setHtmlAttribute('class', 'text-center'),
-            AdminColumn::link('rej', 'Numer rej', 'created_at'),
             AdminColumn::text('imie', 'Imie'),
             AdminColumn::text('nazwisko', 'Nazwisko'),
             AdminColumn::text('telefon', 'Telefon'),
-            AdminColumn::text('dataprzegladu', 'Data Przeglądu'),
+            AdminColumn::email('email', 'Email'),
+            AdminColumn::custom('Aktywność', function ($instance) {
+                return $instance->active ? '<i class="fa fa-check"></i>' : '<i class="fa fa-minus"></i>';})
+                ->setHtmlAttribute('class', 'text-center'),
         ];
 
-        $display = AdminDisplay::datatablesAsync()
+        $display = AdminDisplay::datatables()
             ->setName('firstdatatables')
             ->setOrder([[0, 'asc']])
             ->setDisplaySearch(true)
@@ -98,30 +100,31 @@ class Rejestracje extends Section implements Initializable
      */
     public function onEdit($id = null, $payload = [])
     {
+        $reje = request()->get('p');
+
         $form = AdminForm::card()->addBody([
-          
-                AdminFormElement::select('osoba_id','Właściciel', \App\Models\Osoba::class)->setDisplay('imienazwisko')->required()->setDefaultValue(1),
-                AdminFormElement::html('<a href="/panel/osobas/create?p=reje">Dodaj klienta</a>'),
+            AdminFormElement::text('imie', 'Imie')->required(),
+            AdminFormElement::text('nazwisko', 'Nazwisko')->required(),
+            AdminFormElement::text('telefon', 'Telefon'),
+            AdminFormElement::text('email', 'Email'),
+            AdminFormElement::checkbox('active', 'Aktywność'),
+          ]);
 
-                AdminFormElement::text('rej', 'Nr rej')->required(),
-                AdminFormElement::select('model_id','Model', \App\Models\modele::class)->setDisplay('modelmarka'),
-                AdminFormElement::select('rodzpaliwa_id','Paliwo', \App\Models\Rodzpaliwa::class)->setDisplay('rodzaj'),
-                AdminFormElement::date('perwszarej', "Data pierwszej rejestracji"),
-                AdminFormElement::html("<h2>Dane do ostatniego przeglądu</h2>"),
+        if($reje){
+            $save = [
+                'save_and_close'  => new SaveAndClose(),
+                'cancel'  => (new Cancel()),
+            ];
+        }else{
+            $save = [
+                'save'  => new Save(),
+                'save_and_close'  => new SaveAndClose(),
+                'save_and_create'  => new SaveAndCreate(),
+                'cancel'  => (new Cancel()),
+            ];
+        }
 
-                AdminFormElement::date('dataprzegladu', "Planowana data przeglądu")->setReadonly(true),
-                // AdminFormElement::textarea('uwagiprzegladu', "Uwagi ost przeglądu")->setReadonly(true),
-                AdminFormElement::html("<h2>Planowanie przeglądu</h2>"),
-                AdminFormElement::html(view('admin.datarej')),
-                AdminFormElement::textarea('uwagiprzegladu', "Uwagi"),
-            ]);
-
-        $form->getButtons()->setButtons([
-            'save'  => new Save(),
-            'save_and_close'  => new SaveAndClose(),
-            'save_and_create'  => new SaveAndCreate(),
-            'cancel'  => (new Cancel()),
-        ]);
+        //$form->getButtons()->setBVuttons($save);
 
         return $form;
     }
