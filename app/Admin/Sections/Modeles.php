@@ -20,21 +20,21 @@ use SleepingOwl\Admin\Section;
 /**
  * Class Users
  *
- * @property \C:/Users/uczen/AppData/Local/Programs/Git/App/Models/Users $model
+ * @property \C:/Program Files/Git/App/Models/Users $model
  *
  * @see https://sleepingowladmin.ru/#/ru/model_configuration_section
  */
-class Users extends Section implements Initializable
+class Modeles extends Section implements Initializable
 {
     /**
      * @var bool
      */
-    protected $checkAccess = true;
+    protected $checkAccess = false;
 
     /**
      * @var string
      */
-    protected $title;
+    protected $title ;
 
     /**
      * @var string
@@ -58,11 +58,13 @@ class Users extends Section implements Initializable
     {
         $columns = [
             AdminColumn::text('id', '#')->setWidth('50px')->setHtmlAttribute('class', 'text-center'),
-            AdminColumn::link('name', 'Nazwa', 'created_at'),
-            AdminColumn::text('email', 'Email'),
+            AdminColumn::text('model', 'Model'),
+            AdminColumn::custom('Aktywność', function ($instance) {
+                return $instance->active ? '<i class="fa fa-check"></i>' : '<i class="fa fa-minus"></i>';})
+                ->setHtmlAttribute('class', 'text-center'),
         ];
 
-        $display = AdminDisplay::datatablesAsync()
+        $display = AdminDisplay::datatables()
             ->setName('firstdatatables')
             ->setOrder([[0, 'asc']])
             ->setDisplaySearch(true)
@@ -95,21 +97,28 @@ class Users extends Section implements Initializable
      */
     public function onEdit($id = null, $payload = [])
     {
+        $reje = request()->get('p');
+
         $form = AdminForm::card()->addBody([
-          
-                AdminFormElement::text('name', 'Nazwa')->required(),
-                AdminFormElement::text('email', 'Email')->required(),
-                AdminFormElement::select('perm', 'Uprawnienia',[0=>'User','1'=>'Administrator']),
+            AdminFormElement::text('model', 'Model')->required(),
+            AdminFormElement::checkbox('active', 'Aktywność'),
+          ]);
 
-                AdminFormElement::password('password', 'Hasło'),
-            ]);
+        if($reje){
+            $save = [
+                'save_and_close'  => new SaveAndClose(),
+                'cancel'  => (new Cancel()),
+            ];
+        }else{
+            $save = [
+                'save'  => new Save(),
+                'save_and_close'  => new SaveAndClose(),
+                'save_and_create'  => new SaveAndCreate(),
+                'cancel'  => (new Cancel()),
+            ];
+        }
 
-        $form->getButtons()->setButtons([
-            'save'  => new Save(),
-            'save_and_close'  => new SaveAndClose(),
-            'save_and_create'  => new SaveAndCreate(),
-            'cancel'  => (new Cancel()),
-        ]);
+        //$form->getButtons()->setBVuttons($save);
 
         return $form;
     }
@@ -129,8 +138,6 @@ class Users extends Section implements Initializable
     {
         return true;
     }
-
- 
 
     /**
      * @return void

@@ -2,97 +2,54 @@
 
 use SleepingOwl\Admin\Navigation\Page;
 
-// Default check access logic
-// AdminNavigation::setAccessLogic(function(Page $page) {
-// 	   return auth()->user()->isSuperAdmin();
-// });
-//
-// AdminNavigation::addPage(\App\User::class)->setTitle('test')->setPages(function(Page $page) {
-// 	  $page
-//		  ->addPage()
-//	  	  ->setTitle('Dashboard')
-//		  ->setUrl(route('admin.dashboard'))
-//		  ->setPriority(100);
-//
-//	  $page->addPage(\App\User::class);
-// });
-//
-// // or
-//
-// AdminSection::addMenuPage(\App\User::class)
-
 return [
+    (new Page(\App\Models\User::class))->setAccessLogic(function($p){return false;}),
+    (new Page(\App\Models\Modele::class))->setAccessLogic(function($p){return false;}),
+    
     [
-        'title' => 'Dashboard',
-        'icon'  => 'fas fa-tachometer-alt',
-        'url'   => route('admin.dashboard'),
-    ],
+    'title'=>'Administrator',
+    'icon'=>'fas fa-users',
+    'priority'=>200,
+    'accessLogic'=>function($page){
+        return \auth::user()->perm==1;
+    },
 
-    [
-        'title' => 'Information',
-        'icon'  => 'fas fa-info-circle',
-        'url'   => route('admin.information'),
-    ],
-
-    // Examples
-    // [
-    //    'title' => 'Content',
-    //    'pages' => [
-    //
-    //        \App\User::class,
-    //
-    //        // or
-    //
-           (new Page(\App\Models\User::class))
-               ->setPriority(100)
-               ->setIcon('fas fa-users')
-               ->setTitle('Usery'),
-           (new Page(\App\Models\Rejestracja::class))
-               ->setPriority(100)
-               ->setIcon('fas fa-pen')
-               ->setTitle('Przeglądy'),
-           (new Page(\App\Models\Osoba::class))
-               ->setPriority(100)
-               ->setIcon('fas fa-pen')
-               ->setTitle('Klienci'),
-            //    ->setUrl('users')
-            //    ->setAccessLogic(function (Page $page) {
-            //        return auth()->user()->isSuperAdmin();
-            //    }),
-    //
-    //        // or
-    //
-    //        new Page([
-    //            'title'    => 'News',
-    //            'priority' => 200,
-    //            'model'    => \App\News::class
-    //        ]),
-    //
-    //        // or
-    //        (new Page(/* ... */))->setPages(function (Page $page) {
-    //            $page->addPage([
-    //                'title'    => 'Blog',
-    //                'priority' => 100,
-    //                'model'    => \App\Blog::class
-	//		      ));
-    //
-	//		      $page->addPage(\App\Blog::class);
-    //	      }),
-    //
-    //        // or
-    //
-    //        [
-    //            'title'       => 'News',
-    //            'priority'    => 300,
-    //            'accessLogic' => function ($page) {
-    //                return $page->isActive();
-    //		      },
-    //            'pages'       => [
-    //
-    //                // ...
-    //
-    //            ]
-    //        ]
-    //    ]
-    // ]
+    'pages'=>[                
+                          [
+                                'title'=>'Użytkownicy',
+                                'icon'=>'fas fa-users',
+                                'model'=>\App\Models\User::class,
+                                'priority'=>201,
+                                'accessLogic'=>function($page){
+                                    return \auth::user()->perm==1;
+                                }
+                          ],
+                          [
+                                'title'=>'Modele',
+                                'icon'=>'fas fa-users',
+                                'model'=>\App\Models\Modele::class,
+                                'priority'=>200,
+                                'accessLogic'=>function($page){
+                                    return \auth::user()->perm==1;
+                                }
+                          ],
+                        ],
+                    ],
+                        (new Page(\App\Models\Rejestracja::class))
+                        ->setPriority(100)
+                        ->setIcon('fas fa-pen')
+                        ->setTitle('Przeglądy'),
+                        (new Page(\App\Models\Osoba::class))
+                        ->setPriority(102)
+                        ->setIcon('fas fa-pen')
+                        ->setTitle('Klienci'),
+                        [
+                            'title'=>'Logout',
+                            'icon'=>'fas fa-exit',
+                            'priority'=>204,
+                            'url'=>route('logoutadmin')
+                           
+                      ],
+                     
+ 
 ];

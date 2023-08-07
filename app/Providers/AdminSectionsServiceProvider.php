@@ -11,9 +11,10 @@ class AdminSectionsServiceProvider extends ServiceProvider
      * @var array
      */
     protected $sections = [
+        \App\Models\Rejestracja::class => '\App\Admin\Sections\Rejestracje',
+        \App\Models\Osoba::class => '\App\Admin\Sections\Osobyy',
         \App\Models\User::class => 'App\Admin\Sections\Users',
-        \App\Models\Rejestracja::class => 'App\Admin\Sections\Rejestracje',
-        \App\Models\Osoba::class => 'App\Admin\Sections\Osobyy',
+        \App\Models\Modele::class => '\App\Admin\Sections\Modeles',
     ];
 
     /**
@@ -25,7 +26,7 @@ class AdminSectionsServiceProvider extends ServiceProvider
     public function boot(\SleepingOwl\Admin\Admin $admin)
     {
     	//
-
+        $this->registerPolicies('App\\Admin\\Policies\\');
         parent::boot($admin);
     }
 }

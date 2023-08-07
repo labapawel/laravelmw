@@ -9,3 +9,8 @@ Route::get('information', ['as' => 'admin.information', function () {
 	$content = 'Define your information here.';
 	return AdminSection::view($content, 'Information');
 }]);
+
+Route::get('logout',['as'=>'logoutadmin', function(){
+	\auth::logout();
+	return \Redirect::to('/panel');
+}]);
