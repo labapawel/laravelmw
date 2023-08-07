@@ -24,7 +24,7 @@ use SleepingOwl\Admin\Section;
  *
  * @see https://sleepingowladmin.ru/#/ru/model_configuration_section
  */
-class Modeles extends Section implements Initializable
+class Marki extends Section implements Initializable
 {
     /**
      * @var bool
@@ -58,16 +58,12 @@ class Modeles extends Section implements Initializable
     {
         $columns = [
             AdminColumn::text('id', '#')->setWidth('50px')->setHtmlAttribute('class', 'text-center'),
-            AdminColumn::text('model', 'Model'),
             AdminColumn::text('marka', 'Marka'),
-            AdminColumn::custom('Aktywność', function ($instance) {
-                return $instance->active ? '<i class="fa fa-check"></i>' : '<i class="fa fa-minus"></i>';})
-                ->setHtmlAttribute('class', 'text-center'),
         ];
 
         $display = AdminDisplay::datatables()
             ->setName('firstdatatables')
-            ->setOrder([[0, 'asc']])
+            ->setOrder([[1, 'asc']])
             ->setDisplaySearch(true)
             ->paginate(25)
             ->setColumns($columns)
@@ -98,29 +94,17 @@ class Modeles extends Section implements Initializable
      */
     public function onEdit($id = null, $payload = [])
     {
-        $reje = request()->get('p');
 
         $form = AdminForm::card()->addBody([
-            AdminFormElement::select('marka_id', 'Marka', \App\Models\Marka::class)->setDisplay('marka')->required(),
-            AdminFormElement::text('model', 'Model')->required(),
-            AdminFormElement::checkbox('active', 'Aktywność'),
+            AdminFormElement::text('marka', 'Marka')->required(),
           ]);
 
-        if($reje){
-            $save = [
-                'save_and_close'  => new SaveAndClose(),
-                'cancel'  => (new Cancel()),
-            ];
-        }else{
             $save = [
                 'save'  => new Save(),
                 'save_and_close'  => new SaveAndClose(),
                 'save_and_create'  => new SaveAndCreate(),
                 'cancel'  => (new Cancel()),
             ];
-        }
-
-        //$form->getButtons()->setBVuttons($save);
 
         return $form;
     }
@@ -139,7 +123,7 @@ class Modeles extends Section implements Initializable
     public function isDeletable($model)
     {
         // dd($model);
-        return !count($model->rejestracje);
+        return !count($model->model);
     }
 
     /**

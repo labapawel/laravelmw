@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Modele extends Model
 {
     use HasFactory;
+    public $table="vmodeles";
     protected $fillable = [
         'model',
         'active',
@@ -21,9 +22,18 @@ class Modele extends Model
     public function rodzaj(){
         return $this->belongsTo(RodzajPojazdow::class,'rodzaj_id');
     }
+    public function rejestracje(){
+        return $this->hasMany(Rejestracja::class,'model_id');
+    }
 
     public function getModelmarkaAttribute(){
         return "{$this->marka->marka} ({$this->model})";
+    }
+
+    public function save($attr=[])
+    {
+        $this->tables = 'modeles';
+        parent::save($attr);
     }
     
 }

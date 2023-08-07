@@ -5,6 +5,8 @@ use SleepingOwl\Admin\Navigation\Page;
 return [
     (new Page(\App\Models\User::class))->setAccessLogic(function($p){return false;}),
     (new Page(\App\Models\Modele::class))->setAccessLogic(function($p){return false;}),
+    (new Page(\App\Models\Marka::class))->setAccessLogic(function($p){return false;}),
+    (new Page(\App\Models\Rodzpaliwa::class))->setAccessLogic(function($p){return false;}),
     
     [
     'title'=>'Administrator',
@@ -17,7 +19,7 @@ return [
     'pages'=>[                
                           [
                                 'title'=>'Użytkownicy',
-                                'icon'=>'fas fa-users',
+                                'icon'=>'fas fa-wrench',
                                 'model'=>\App\Models\User::class,
                                 'priority'=>201,
                                 'accessLogic'=>function($page){
@@ -33,6 +35,15 @@ return [
                                     return \auth::user()->perm==1;
                                 }
                           ],
+                          (new Page(\App\Models\Marka::class))
+                            ->setTitle("Marki")
+                            ->setIcon('fa fa-truck')
+                            ->setPriority(202),
+                          (new Page(\App\Models\Rodzpaliwa::class))
+                            ->setTitle("Paliwa")
+                            ->setIcon('fa fa-leaf')
+                            ->setPriority(203),
+
                         ],
                     ],
                         (new Page(\App\Models\Rejestracja::class))

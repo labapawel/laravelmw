@@ -11,7 +11,7 @@ class UsersSectionModelPolicy {
     use HandlesAuthorization;
 
 public function before($user, $ability, $section, $item){
-     return \auth::user()->perm==1;
+    //  return \auth::user()->perm==1;
 }
 
 public function display($user, $section, $item){
