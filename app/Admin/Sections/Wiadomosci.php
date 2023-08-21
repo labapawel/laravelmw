@@ -24,7 +24,7 @@ use SleepingOwl\Admin\Section;
  *
  * @see https://sleepingowladmin.ru/#/ru/model_configuration_section
  */
-class Modeles extends Section implements Initializable
+class Wiadomosci extends Section implements Initializable
 {
     /**
      * @var bool
@@ -58,16 +58,15 @@ class Modeles extends Section implements Initializable
     {
         $columns = [
             AdminColumn::text('id', '#')->setWidth('50px')->setHtmlAttribute('class', 'text-center'),
-            AdminColumn::text('model', 'Model'),
-            AdminColumn::text('markastr', 'Marka'),
-            AdminColumn::custom('Aktywność', function ($instance) {
-                return $instance->active ? '<i class="fa fa-check"></i>' : '<i class="fa fa-minus"></i>';})
-                ->setHtmlAttribute('class', 'text-center'),
+            AdminColumn::text('osoba_id', 'ID Odbiorcy'),
+            AdminColumn::text('datawyslania', 'Data wysłania'),
+            AdminColumn::text('status', 'Status'),
+            AdminColumn::text('datawyslane', 'Kiedy wysłane'),
         ];
 
         $display = AdminDisplay::datatables()
             ->setName('firstdatatables')
-            ->setOrder([[0, 'asc']])
+            ->setOrder([[1, 'asc']])
             ->setDisplaySearch(true)
             ->paginate(25)
             ->setColumns($columns)
@@ -101,9 +100,16 @@ class Modeles extends Section implements Initializable
         $reje = request()->get('p');
 
         $form = AdminForm::card()->addBody([
-            AdminFormElement::select('marka_id', 'Marka', \App\Models\Marka::class)->setDisplay('marka')->required(),
-            AdminFormElement::text('model', 'Model')->required(),
-            AdminFormElement::checkbox('active', 'Aktywność'),
+            AdminFormElement::select('osoba_id','Właściciel', \App\Models\Osoba::class)->setDisplay('imienazwisko')->required()->setDefaultValue(1),
+            AdminFormElement::textarea('tresc', 'Wiadomosc')->required(),
+            AdminFormElement::date('datawyslania', "Data wysłania")->required(),
+            AdminFormElement::date('datawyslane', "Kiedy wiadomość zosatała nadana")->setReadonly(true),
+            AdminFormElement::select('status','Status', [
+                'dowyslania'=>'dowyslania',
+                'wyslane'=>'wyslane'
+            ])->setDisplay('imienazwisko')->setDefaultValue('dowyslania')
+                ,
+
           ]);
 
         if($reje){
@@ -138,8 +144,10 @@ class Modeles extends Section implements Initializable
      */
     public function isDeletable($model)
     {
+        return true;
         // dd($model);
-        return !count($model->rejestracje);
+        // return $model->getKey()!=1;
+// /        return !count($model->model);
     }
 
     /**

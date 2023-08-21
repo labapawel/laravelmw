@@ -14,4 +14,9 @@ class Przeglad extends Model
         'datanastprzegladu',
         'uwagi'
     ];
+
+    public function rejestracja()
+    {
+        return $this->belongsTo(Rejestracja::class,'rejestracja_id');
+    }
 }

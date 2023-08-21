@@ -27,6 +27,7 @@ class Modele extends Model
     }
 
     public function getModelmarkaAttribute(){
+        // dd($this->marka);
         return "{$this->marka->marka} ({$this->model})";
     }
 

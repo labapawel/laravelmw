@@ -54,6 +54,10 @@ return [
                         ->setPriority(102)
                         ->setIcon('fas fa-pen')
                         ->setTitle('Klienci'),
+                        (new Page(\App\Models\Wiadomosc::class))
+                        ->setPriority(103)
+                        ->setIcon('fas fa-envelope')
+                        ->setTitle('Wiadomości'),
                         [
                             'title'=>'Logout',
                             'icon'=>'fas fa-exit',

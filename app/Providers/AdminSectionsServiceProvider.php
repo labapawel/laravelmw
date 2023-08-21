@@ -17,6 +17,7 @@ class AdminSectionsServiceProvider extends ServiceProvider
         \App\Models\Modele::class => '\App\Admin\Sections\Modeles',
         \App\Models\Marka::class => '\App\Admin\Sections\Marki',
         \App\Models\Rodzpaliwa::class => '\App\Admin\Sections\Paliwa',
+        \App\Models\Wiadomosc::class => '\App\Admin\Sections\Wiadomosci',
     ];
 
     /**
